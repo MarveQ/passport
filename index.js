@@ -1,7 +1,7 @@
 const express = require('express')
 const session = require('express-session')
 
-const FileStore = require('session-file-store') (session)
+const FileStore = require('session-file-store')(session)
 const passport = require('passport')
 
 const app = express()
@@ -32,7 +32,6 @@ app.use(passport.initialize()) //подключаемся к сессии
 app.use(passport.session()) //сохраняем пользоватеся
 
 
-
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
@@ -40,25 +39,29 @@ app.get('/', (req, res) => {
 
 //сюда отправляем email и password для аунтификации
 app.post('/login', (req, res, next) => {
-    passport.authenticate("local", function (err, user){
-        if(err) {
+    passport.authenticate("local", function (err, user) {
+        if (err) {
             return next(err);
         }
-        if(!user) {
+        if (!user) {
             return res.send('Enter correct email and password');
         }
-        req.login(user, function(err) {
-            if(err){
+        req.login(user, function (err) {
+            if (err) {
                 return next(err);
             }
             return res.redirect('/admin');
         })
-    }) (req, res, next); //?
+    })(req, res, next); //?
 })
 
 
-const auth = (req, res, next) => { //?
-    return res.redirect('/');
+const auth = (req, res, next) => { //auth для входа на строницу
+    if (req.isAuthenticated()) {
+        next()
+    } else {
+        return res.redirect('/');
+    }
 }
 
 

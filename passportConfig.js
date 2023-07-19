@@ -15,13 +15,13 @@ passport.serializeUser(function (user, done) { // сохраняет user
 
 passport.deserializeUser(function (id, done) { // проверяет id
         console.log("Deserialization", id)
-        const user1 = user.id === id ? user : false; //сравниваем id юзера из database(user) с id который вернул serialize
+        const user1 = (user.id === id) ? user : false; //сравниваем id юзера из database(user) с id который вернул serialize
         done(null, user1);
     }
 )
 
 passport.use( //?
-    new LocalStrategy({usernameField: 'email'}, {passwordField: 'password'}, function verify(email, password, done) {
+    new LocalStrategy({usernameField: 'email'},  function verify(email, password, done) {
         if(email === user.email && password === user.password){
             return done(null, user)
         }else {
